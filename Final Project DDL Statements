@@ -62,6 +62,18 @@ CREATE TABLE Player (
     jersy_number INT,
     FOREIGN KEY country_id REFERENCES Country (country_id) 
 );
+--Position: player_id, team_id, position, from_time, to_time, from_period, to_period, start_reason, end_reason
+CREATE TABLE Position (
+    FOREIGN KEY player_id REFERENCES Player (player_id),
+    FOREIGN KEY team_id REFERENCES Team (team_id),
+    position VARCHAR (255),
+    from_time VARCHAR(255),
+    to_time VARCHAR(255),
+    from_period INT,
+    to_period INT,
+    start_reason VARCHAR(255),
+    end_reason VARCHAR(255)
+);
 --Referee;  referee_id, referee_name, country_id
 CREATE TABLE Referee (
     referee_id INT PRIMARY KEY,
