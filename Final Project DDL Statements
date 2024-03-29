@@ -88,14 +88,13 @@ CREATE TABLE Manager (
     date_of_birth DATE,
     FOREIGN KEY country_id REFERENCES Country (country_id)
 );
---Event;  event_id, match_id, index, period, minute, second, type_id, type_name, possession, posession_team_id, play_pattern_name, event_team_id, player_id, position,  location[x,y], duration, under_pressure, out
+--Event;  event_id, match_id, index, period, timestamp, type_id, type_name, possession, posession_team_id, play_pattern_name, event_team_id, player_id, position,  location[x,y], duration, under_pressure, out
 CREATE TABLE Event (
     event_id VARCHAR(255) PRIMARY KEY,
     FOREIGN KEY match_id REFERENCES Matches (match_id),
     index INT,
     period INT, 
-    minute INT,
-    second INT,
+    timestamp VARCHAR(255),
     type_id INT,
     type_name VARCHAR(255),
     possession INT,
