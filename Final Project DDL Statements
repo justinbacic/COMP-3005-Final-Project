@@ -2,10 +2,6 @@
 CREATE TABLE Season (
   season_id INT PRIMARY KEY,
   season_name VARCHAR(255)
-  --last_name VARCHAR(255) NOT NULL,
-  --email VARCHAR(255) UNIQUE NOT NULL,
-  --phone VARCHAR(15),
-  --join_date DATE DEFAULT (CURRENT_DATE)
 );
 --Country; country_id, country_name
 CREATE TABLE Country (
