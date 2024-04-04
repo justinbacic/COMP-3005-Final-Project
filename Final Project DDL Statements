@@ -15,11 +15,6 @@ CREATE TABLE Competition(
     competition_gender VARCHAR(255),
     FOREIGN KEY country_name REFERENCES Country (country_name)
 );
---Competition_Stage;  stage_id, stage_name, competition_id
-CREATE TABLE Competition_Stage (
-    stage_id INT PRIMARY KEY,
-    stage_name VARCHAR(255)
-);
 --Stadium; stadium_id, stadium_name, country_id
 CREATE TABLE Stadium (
     stadium_id INT PRIMARY KEY,
