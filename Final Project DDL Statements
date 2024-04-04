@@ -13,7 +13,6 @@ CREATE TABLE Competition(
     competition_id INT PRIMARY KEY,
     competition_name VARCHAR(255),
     competition_gender VARCHAR(255),
-    FOREIGN KEY season_id REFERENCES Season (season_id),
     FOREIGN KEY country_name REFERENCES Country (country_name)
 );
 --Competition_Stage;  stage_id, stage_name, competition_id
