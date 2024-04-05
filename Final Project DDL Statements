@@ -1,8 +1,4 @@
---Season;  season_id, season_name
-CREATE TABLE Season (
-  season_id INT PRIMARY KEY,
-  season_name VARCHAR(255)
-);
+
 --Country; country_id, country_name
 CREATE TABLE Country (
     country_id INT PRIMARY KEY,
@@ -13,13 +9,19 @@ CREATE TABLE Competition(
     competition_id INT PRIMARY KEY,
     competition_name VARCHAR(255),
     competition_gender VARCHAR(255),
-    FOREIGN KEY country_name REFERENCES Country (country_name)
+    FOREIGN KEY (country_name) REFERENCES Country (country_name)
+);
+--Season;  season_id, season_name
+CREATE TABLE Season (
+  season_id INT PRIMARY KEY,
+  season_name VARCHAR(255)
+  FOREIGN KEY (competition_id) REFERENCES Competition (competition_id)
 );
 --Stadium; stadium_id, stadium_name, country_id
 CREATE TABLE Stadium (
     stadium_id INT PRIMARY KEY,
     stadium_name VARCHAR(255),
-    FOREIGN KEY country_id REFERENCES Country (country_id)
+    FOREIGN KEY (country_id) REFERENCES Country (country_id)
 );
 --Match;  match_id, match_date, kick_off, home_score, away_score, match_week, stage_id, stadium_id, home_team_id, home_team_manager_id, home_team_lineup[player_id], away_team_id, away_team_manager_id, away_team_lineup[player_id], referee_id
 CREATE TABLE Matches (
@@ -29,19 +31,18 @@ CREATE TABLE Matches (
     home_score INT,
     away_score INT,
     match_week INT,
-    FOREIGN KEY stage_id REFERENCES Competition_Stage (stage_id),
-    FOREIGN KEY stadium_id REFERENCES Stadium (stadium_id),
-    FOREIGN KEY home_team_id REFERENCES Team (team_id),
-    FOREIGN KEY home_team_manager_id REFERENCES Manager (manager_id),
-    FOREIGN KEY away_team_id REFERENCES Team (team_id),
-    FOREIGN KEY away_team_manager_id REFERENCES Manager (manager_id),
-    FOREIGN KEY referee_id REFERENCES Referee (referee_id)
+    FOREIGN KEY (stadium_id REFERENCES Stadium (stadium_id),
+    FOREIGN KEY (home_team_id REFERENCES Team (team_id),
+    FOREIGN KEY (home_team_manager_id REFERENCES Manager (manager_id),
+    FOREIGN KEY (away_team_id) REFERENCES Team (team_id),
+    FOREIGN KEY (away_team_manager_id) REFERENCES Manager (manager_id),
+    FOREIGN KEY (referee_id) REFERENCES Referee (referee_id)
 );
 --Team;  team_id, team_name, team_gender, country_id
 CREATE TABLE Team (
     team_id INT PRIMARY KEY,
     team_name VARCHAR(255),
-    FOREIGN KEY country_id REFERENCES Country (country_id)
+    FOREIGN KEY (country_id) REFERENCES Country (country_id)
 );
 --Player;  player_id, player_name, nickname, jersy_number, country_id
 CREATE TABLE Player (
@@ -49,7 +50,7 @@ CREATE TABLE Player (
     player_name VARCHAR (255),
     nickname VARCHAR (255),
     jersy_number INT,
-    FOREIGN KEY country_id REFERENCES Country (country_id) 
+    FOREIGN KEY (country_id) REFERENCES Country (country_id) 
 );
 --Position: player_id, team_id, match_id, position, from_time, to_time, from_period, to_period, start_reason, end_reason
 CREATE TABLE Position (
