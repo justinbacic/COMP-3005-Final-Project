@@ -23,6 +23,20 @@ CREATE TABLE Stadium (
     stadium_name VARCHAR(255),
     FOREIGN KEY (country_id) REFERENCES Country (country_id)
 );
+--Team;  team_id, team_name, team_gender, country_id
+CREATE TABLE Team (
+    team_id INT PRIMARY KEY,
+    team_name VARCHAR(255),
+    FOREIGN KEY (country_id) REFERENCES Country (country_id)
+);
+--Manager;  manager_id, manager_name, nickname, date_of_birth, country_id, 
+CREATE TABLE Manager (
+    manager_id INT PRIMARY KEY,
+    manager_name VARCHAR(255),
+    nickname VARCHAR(255),
+    date_of_birth DATE,
+    FOREIGN KEY (country_id) REFERENCES Country (country_id)
+);
 --Match;  match_id, match_date, kick_off, home_score, away_score, match_week, stage_id, stadium_id, home_team_id, home_team_manager_id, home_team_lineup[player_id], away_team_id, away_team_manager_id, away_team_lineup[player_id], referee_id
 CREATE TABLE Matches (
     match_id INT PRIMARY KEY,
@@ -31,19 +45,16 @@ CREATE TABLE Matches (
     home_score INT,
     away_score INT,
     match_week INT,
+    FOREIGN KEY (season_id) REFERENCES Season (season_id),
+    stage_name VARCHAR(255),
     FOREIGN KEY (stadium_id REFERENCES Stadium (stadium_id),
-    FOREIGN KEY (home_team_id REFERENCES Team (team_id),
-    FOREIGN KEY (home_team_manager_id REFERENCES Manager (manager_id),
+    FOREIGN KEY (home_team_id) REFERENCES Team (team_id),
+    FOREIGN KEY (home_team_manager_id) REFERENCES Manager (manager_id),
     FOREIGN KEY (away_team_id) REFERENCES Team (team_id),
     FOREIGN KEY (away_team_manager_id) REFERENCES Manager (manager_id),
     FOREIGN KEY (referee_id) REFERENCES Referee (referee_id)
 );
---Team;  team_id, team_name, team_gender, country_id
-CREATE TABLE Team (
-    team_id INT PRIMARY KEY,
-    team_name VARCHAR(255),
-    FOREIGN KEY (country_id) REFERENCES Country (country_id)
-);
+
 --Player;  player_id, player_name, nickname, jersy_number, country_id
 CREATE TABLE Player (
     player_id INT PRIMARY KEY,
@@ -54,9 +65,9 @@ CREATE TABLE Player (
 );
 --Position: player_id, team_id, match_id, position, from_time, to_time, from_period, to_period, start_reason, end_reason
 CREATE TABLE Position (
-    FOREIGN KEY player_id REFERENCES Player (player_id),
-    FOREIGN KEY team_id REFERENCES Team (team_id),
-    FOREIGN KEY match_id REFERENCES Match (match_id),
+    FOREIGN KEY (player_id) REFERENCES Player (player_id),
+    FOREIGN KEY (team_id) REFERENCES Team (team_id),
+    FOREIGN KEY (match_id) REFERENCES Match (match_id),
     position VARCHAR (255),
     from_time VARCHAR(255),
     to_time VARCHAR(255),
@@ -69,30 +80,23 @@ CREATE TABLE Position (
 CREATE TABLE Referee (
     referee_id INT PRIMARY KEY,
     referee_name VARCHAR(255),
-    FOREIGN KEY country_id REFERENCES Country (country_id)
+    FOREIGN KEY (country_id) REFERENCES Country (country_id)
 );
---Manager;  manager_id, manager_name, nickname, date_of_birth, country_id, 
-CREATE TABLE Manager (
-    manager_id INT PRIMARY KEY,
-    manager_name VARCHAR(255),
-    nickname VARCHAR(255),
-    date_of_birth DATE,
-    FOREIGN KEY country_id REFERENCES Country (country_id)
-);
+
 --Event;  event_id, match_id, index, period, timestamp, type_id, type_name, possession, posession_team_id, play_pattern_name, event_team_id, player_id, position,  location[x,y], duration, under_pressure, out
 CREATE TABLE Event (
     event_id VARCHAR(255) PRIMARY KEY,
-    FOREIGN KEY match_id REFERENCES Matches (match_id),
+    FOREIGN KEY (match_id) REFERENCES Matches (match_id),
     index INT,
     period INT, 
     timestamp VARCHAR(255),
     type_id INT,
     type_name VARCHAR(255),
     possession INT,
-    FOREIGN KEY posession_team_id REFERENCES Team (team_id),
+    FOREIGN KEY (posession_team_id) REFERENCES Team (team_id),
     play_pattern_name VARCHAR(255),
-    FOREIGN KEY event_team_id REFERENCES Team (team_id),
-    FOREIGN KEY player_id REFERENCES Player (player_id),
+    FOREIGN KEY (event_team_id) REFERENCES Team (team_id),
+    FOREIGN KEY (player_id) REFERENCES Player (player_id),
     position VARCHAR(255),
     location_x INT,
     location_y INT,
@@ -102,7 +106,7 @@ CREATE TABLE Event (
 );
 --Block; event_id, counterpress, deflection, offensive, save_block
 CREATE TABLE Block (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     counterpress BOOLEAN,
     deflection BOOLEAN,
     offensive BOOLEAN,
@@ -110,12 +114,12 @@ CREATE TABLE Block (
 );
 --Ball_Receipt; event_id,  outcome
 CREATE TABLE Ball_Receipt (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     outcome VARCHAR(255)
 );
 --Dribble; event_id, outcome, nutmeg, overrun, no_touch
 CREATE TABLE Dribble (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     outcome VARCHAR(255),
     nutmeg BOOLEAN,
     overrun BOOLEAN,
@@ -123,13 +127,13 @@ CREATE TABLE Dribble (
 );
 --Dribbled_Past; event_id,  counterpress
 CREATE TABLE Dribbled_Past (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     counterpress BOOLEAN
 );
 --Pass; event_id, recipiant_player_id, length, angle, height, end_location[x,y], body_part, type, outcome, technique, deflected, miscommunication
 CREATE TABLE Pass (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
-    FOREIGN KEY recipiant_player_id REFERENCES Player (player_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
+    FOREIGN KEY (recipiant_player_id) REFERENCES Player (player_id),
     length FLOAT,
     angle FLOAT,
     height VARCHAR(255),
@@ -144,7 +148,7 @@ CREATE TABLE Pass (
 );
 --Shot; event_id, end_location[x,y,z], first_time, xg_score, deflected, technique, body_part, type, outcome
 CREATE TABLE Shot (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     end_location_x FLOAT,
     end_location_y FLOAT,
     end_location_z FLOAT,
@@ -158,13 +162,13 @@ CREATE TABLE Shot (
 );
 --Carry; event_id, end_location[x,y]
 CREATE TABLE Carry (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     end_location_x INT,
     end_location_y INT
 );
 --Foul_Committed; event_id, advantage, counterpress, offensive, penalty, card, type
 CREATE TABLE Foul_Committed (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     advantage BOOLEAN,
     counterpress BOOLEAN,
     offensive BOOLEAN,
@@ -174,14 +178,14 @@ CREATE TABLE Foul_Committed (
 );
 --Foul_Won; event_id, advantage, defensive, penalty
 CREATE TABLE Foul_Won (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     advantage BOOLEAN,
     defensive BOOLEAN,
     penalty BOOLEAN
 );
 --Goal_Keeper; event_id, position, technique, body_part, type, outcome
 CREATE TABLE Goal_Keeper (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     position VARCHAR(255),
     technique VARCHAR(255),
     body_part VARCHAR(255),
@@ -190,12 +194,12 @@ CREATE TABLE Goal_Keeper (
 );
 --Interception; event_id, outcome
 CREATE TABLE Interception (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     outcome VARCHAR(255)
 );
 --Duel; event_id, counterpress, type, outcome
 CREATE TABLE Duel (
-    FOREIGN KEY event_id REFERENCES Event (event_id),
+    FOREIGN KEY (event_id) REFERENCES Event (event_id),
     counterpress BOOLEAN,
     outcome VARCHAR(255)
 );
