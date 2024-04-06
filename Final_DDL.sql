@@ -123,6 +123,7 @@ CREATE TABLE Event (
     FOREIGN KEY (event_team_id) REFERENCES Team (team_id),
 	player_id INT,
     FOREIGN KEY (player_id) REFERENCES Player (player_id),
+	position VARCHAR(255),
     location_x INT,
     location_y INT,
     duration FLOAT, 
