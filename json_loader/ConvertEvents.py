@@ -380,17 +380,18 @@ def extractVal(str):
     return ret
 def extractLocation(str,num):
     arr = str.split(':',1)
-    ret = ""
+    ret = "null"
     if len(arr) > 1:
         ret = arr[1].split("[")[1]
         ret = ret.split("]")[0]
+        ret = ret.split(",")
         if num == 1:
-            return ret.split(",")[0].strip()
+            return ret[0].strip()
         elif num == 2:
-            return ret.split(",")[1].strip()
-        elif num == 3 and len(ret.split(",")) > 2:
-            return ret.split(",")[2].strip()
-    return ret
+            return ret[1].strip()
+        elif num == 3 and len(ret) > 2:
+            return ret[2].strip()
+    return "null"
 def callConvert(path,csvDir,type):
     dir = os.listdir(path)
     for file in dir:
