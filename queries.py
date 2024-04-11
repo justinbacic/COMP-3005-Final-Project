@@ -181,7 +181,7 @@ NATURAL JOIN
 NATURAL JOIN Player
 
 GROUP BY Player.player_name
-ORDER BY avg_xg_score;
+ORDER BY avg_xg_score DESC;
     """
 
     #==========================================================================
@@ -215,7 +215,7 @@ NATURAL JOIN
 NATURAL JOIN Player
 
 GROUP BY Player.player_name
-ORDER BY shots_made;
+ORDER BY shots_made DESC;
     """
 
     #==========================================================================
@@ -250,7 +250,7 @@ NATURAL JOIN
 NATURAL JOIN Player
 
 GROUP BY Player.player_name
-ORDER BY first_time_shots_made;
+ORDER BY first_time_shots_made DESC;
     """
 
     #==========================================================================
@@ -283,7 +283,7 @@ NATURAL JOIN
 JOIN Team ON pass_events.event_team_id = Team.team_id
 
 GROUP BY Team.team_name
-ORDER BY passes_made;
+ORDER BY passes_made DESC;
     """
 
     #==========================================================================
@@ -316,7 +316,7 @@ NATURAL JOIN
 JOIN Player ON pass_events.recipiant_player_id = Player.player_id
 
 GROUP BY Player.player_name
-ORDER BY passed_towards;
+ORDER BY passed_towards DESC;
     """
 
     #==========================================================================
@@ -349,7 +349,7 @@ NATURAL JOIN
 JOIN Team ON shot_events.event_team_id = Team.team_id
 
 GROUP BY Team.team_name
-ORDER BY shots_made;
+ORDER BY shots_made DESC;
     """
 
     #==========================================================================
@@ -383,7 +383,7 @@ NATURAL JOIN
 NATURAL JOIN Player
 
 GROUP BY Player.player_name
-ORDER BY through_balls;
+ORDER BY through_balls DESC;
     """
 
     #==========================================================================
@@ -417,7 +417,7 @@ NATURAL JOIN
 JOIN Team ON pass_events.event_team_id = Team.team_id
 
 GROUP BY Team.team_name
-ORDER BY through_balls;
+ORDER BY through_balls DESC;
     """
 
     #==========================================================================
@@ -451,7 +451,7 @@ NATURAL JOIN
 NATURAL JOIN Player
 
 GROUP BY Player.player_name
-ORDER BY completed_dribbles;
+ORDER BY completed_dribbles DESC;
 
     """
 
