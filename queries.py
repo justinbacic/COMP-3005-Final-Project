@@ -169,19 +169,12 @@ def Q_1(cursor, conn, execution_time):
     # Enter QUERY within the quotes:
 
     query = """
-SELECT Player.player_name, AVG(shot_events.xg_score) AS avg_xg_score
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name = '2020/2021'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.player_id, Shot.xg_score
-  FROM Shot NATURAL JOIN Event) AS shot_events
-NATURAL JOIN Player
-
-GROUP BY Player.player_name
-ORDER BY avg_xg_score DESC;
+SELECT player_name, AVG(Shot.xg_score) AS avg_xg
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Shot
+JOIN Player on Event.player_id = Player.player_id
+WHERE Season.season_name = '2020/2021' AND Competition.competition_name = 'La Liga'
+GROUP BY player_name
+ORDER BY avg_xg DESC;
     """
 
     #==========================================================================
@@ -203,19 +196,12 @@ def Q_2(cursor, conn, execution_time):
 
     query = """
     --QUERY 2
-SELECT Player.player_name, COUNT(shot_events.event_id) AS shots_made
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name = '2020/2021'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.player_id, Event.event_id
-  FROM Shot NATURAL JOIN Event) AS shot_events
-NATURAL JOIN Player
-
-GROUP BY Player.player_name
-ORDER BY shots_made DESC;
+SELECT player_name, COUNT(Shot.event_id) AS shotnum
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Shot
+JOIN Player on Event.player_id = Player.player_id
+WHERE Season.season_name = '2020/2021' AND Competition.competition_name = 'La Liga'
+GROUP BY player_name
+ORDER BY shotnum DESC;
     """
 
     #==========================================================================
@@ -237,20 +223,14 @@ def Q_3(cursor, conn, execution_time):
     
     query = """
     --QUERY 3
-SELECT Player.player_name, COUNT(shot_events.event_id) AS first_time_shots_made
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name IN ('2020/2021', '2019/2020', '2018/2019')
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.player_id, Event.event_id
-  FROM Shot JOIN Event ON Shot.event_id = Event.event_id
-    AND Shot.first_time = TRUE) AS shot_events
-NATURAL JOIN Player
-
-GROUP BY Player.player_name
-ORDER BY first_time_shots_made DESC;
+SELECT player_name, COUNT(Shot.event_id) AS first_time_shots
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Shot
+JOIN Player on Event.player_id = Player.player_id
+WHERE Season.season_name IN ('2020/2021', '2019/2020', '2018/2019') 
+AND Competition.competition_name = 'La Liga'
+AND Shot.first_time = true
+GROUP BY player_name
+ORDER BY first_time_shots DESC;
     """
 
     #==========================================================================
@@ -271,19 +251,13 @@ def Q_4(cursor, conn, execution_time):
     
     query = """
     --QUERY 4
-SELECT Team.team_name, COUNT(pass_events.event_id) AS passes_made
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name = '2020/2021'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.event_team_id, Event.event_id
-  FROM Pass NATURAL JOIN Event) AS pass_events
-JOIN Team ON pass_events.event_team_id = Team.team_id
-
-GROUP BY Team.team_name
-ORDER BY passes_made DESC;
+SELECT team_name, COUNT(Pass.event_id) AS  pass_count
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Pass
+JOIN Team on Event.event_team_id = Team.team_id
+WHERE Season.season_name ='2020/2021'
+AND Competition.competition_name = 'La Liga'
+GROUP BY team_name
+ORDER BY pass_count DESC;
     """
 
     #==========================================================================
@@ -304,19 +278,13 @@ def Q_5(cursor, conn, execution_time):
     
     query = """
 --QUERY 5
-SELECT Player.player_name, COUNT(pass_events.event_id) AS passed_towards
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'Premier League'
-  AND Season.season_name = '2003/2004'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Pass.recipiant_player_id, Event.event_id
-  FROM Pass NATURAL JOIN Event) AS pass_events
-JOIN Player ON pass_events.recipiant_player_id = Player.player_id
-
-GROUP BY Player.player_name
-ORDER BY passed_towards DESC;
+SELECT player_name, COUNT(Pass.event_id) AS intended_recipient_count
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Pass
+JOIN Player on Pass.recipiant_player_id = Player.player_id
+WHERE Season.season_name = '2003/2004'
+AND Competition.competition_name = 'Premier League'
+GROUP BY player_name
+ORDER BY intended_recipient_count DESC;
     """
 
     #==========================================================================
@@ -337,19 +305,13 @@ def Q_6(cursor, conn, execution_time):
     
     query = """
 --QUERY 6
-SELECT Team.team_name, COUNT(shot_events.event_id) AS shots_made
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'Premier League'
-  AND Season.season_name = '2003/2004'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.event_team_id, Event.event_id
-  FROM Shot NATURAL JOIN Event) AS shot_events
-JOIN Team ON shot_events.event_team_id = Team.team_id
-
-GROUP BY Team.team_name
-ORDER BY shots_made DESC;
+SELECT team_name, COUNT(Shot.event_id) AS num_shots
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Shot
+JOIN Team on Event.event_team_id = Team.team_id
+WHERE Season.season_name = '2003/2004'
+AND Competition.competition_name = 'Premier League'
+GROUP BY team_name
+ORDER BY num_shots DESC;
     """
 
     #==========================================================================
@@ -370,19 +332,13 @@ def Q_7(cursor, conn, execution_time):
     
     query = """
     --QUERY 7
-SELECT Player.player_name, COUNT(pass_events.event_id) AS through_balls
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name = '2020/2021'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.player_id, Event.event_id
-  FROM Pass JOIN Event ON Event.event_id = Pass.event_id
-    AND Pass.technique = 'Through Ball') AS pass_events
-NATURAL JOIN Player
-
-GROUP BY Player.player_name
+SELECT player_name, COUNT(Pass.event_id) AS through_balls
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Pass
+JOIN Player on Event.player_id = Player.player_id
+WHERE Season.season_name = '2020/2021'
+AND Competition.competition_name = 'La Liga'
+AND Pass.technique = 'Through Ball'
+GROUP BY player_name
 ORDER BY through_balls DESC;
     """
 
@@ -404,19 +360,13 @@ def Q_8(cursor, conn, execution_time):
     
     query = """
 --QUERY 8
-SELECT Team.team_name, COUNT(pass_events.event_id) AS through_balls
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name = '2020/2021'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.event_team_id, Event.event_id
-  FROM Pass JOIN Event ON Event.event_id = Pass.event_id
-    AND Pass.technique = 'Through Ball') AS pass_events
-JOIN Team ON pass_events.event_team_id = Team.team_id
-
-GROUP BY Team.team_name
+SELECT team_name, COUNT(Pass.event_id) AS through_balls
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Pass
+JOIN Team on Event.event_team_id = Team.team_id
+WHERE Season.season_name = '2020/2021'
+AND Competition.competition_name = 'La Liga'
+AND Pass.technique = 'Through Ball'
+GROUP BY team_name
 ORDER BY through_balls DESC;
     """
 
@@ -438,19 +388,13 @@ def Q_9(cursor, conn, execution_time):
     
     query = """
 --QUERY 9
-SELECT Player.player_name, COUNT(dribble_events.event_id) AS completed_dribbles
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name IN ('2020/2021', '2019/2020', '2018/2019')
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.player_id, Event.event_id
-  FROM Dribble JOIN Event ON Event.event_id = Dribble.event_id
-    AND Dribble.outcome = 'Complete') AS dribble_events
-NATURAL JOIN Player
-
-GROUP BY Player.player_name
+SELECT player_name, COUNT(Dribble.event_id) AS completed_dribbles
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Dribble
+JOIN Player on Event.player_id = Player.player_id
+WHERE Season.season_name IN ('2020/2021', '2019/2020', '2018/2019') 
+AND Competition.competition_name = 'La Liga'
+AND Dribble.outcome = 'Complete'
+GROUP BY player_name
 ORDER BY completed_dribbles DESC;
 
     """
@@ -473,20 +417,13 @@ def Q_10(cursor, conn, execution_time):
     
     query = """
 --QUERY 10
-SELECT Player.player_name, COUNT(dribble_past_events.event_id) AS times_dribbled_past
-FROM Competition
-JOIN Season ON Season.competition_id = Competition.competition_id
-  AND Competition.competition_name = 'La Liga'
-  AND Season.season_name ='2020/2021'
-NATURAL JOIN Matches
-NATURAL JOIN
-( SELECT Event.match_id, Event.player_id, Event.event_id
-  FROM Dribbled_Past NATURAL JOIN Event) AS dribble_past_events
-NATURAL JOIN Player
-
-GROUP BY Player.player_name
-ORDER BY times_dribbled_past ASC;
-
+SELECT player_name, COUNT(Dribbled_past.event_id) AS dribbled_past
+FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Dribbled_past
+JOIN Player on Event.player_id = Player.player_id
+WHERE Season.season_name = '2020/2021'
+AND Competition.competition_name = 'La Liga'
+GROUP BY player_name
+ORDER BY dribbled_past ASC;
 
     """
 
