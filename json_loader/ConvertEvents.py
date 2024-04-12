@@ -69,12 +69,12 @@ def convertEvents(filename):
                 event_team_id = extractVal(currLine)
                 currLine = reading.readline()
                 continue
-            elif "player" in currLine:
+            elif "player" in currLine and player_id == "null":
                 currLine = reading.readline()
                 player_id = extractVal(currLine)
                 currLine = reading.readline()
                 continue
-            elif "position" in currLine:
+            elif "position" in currLine and position == "null":
                 currLine = reading.readline()
                 currLine = reading.readline()
                 position = extractVal(currLine)
@@ -101,10 +101,9 @@ def convertEvents(filename):
                 currLine = reading.readline()
         if type_id == "35" or type_id == "36":
             continue
-        currEvent = "("+event_id +", " + match_id +", "+index +", "+period +", "+  timestamp +", "+type_id +", "+type_name +", "+possession +", "+posession_team_id +", "+play_pattern_name +", "+event_team_id +", "+player_id +", "+position +", "+location_x +", "+location_y +", "+        duration +", "+        under_pressure +", "+out+")"
+        currEvent = "("+event_id +", " + match_id +", "+index +", "+period +", "+  timestamp +", "+type_id +", "+type_name +", "+possession +", "+posession_team_id +", "+play_pattern_name +", "+event_team_id +", "+player_id +", "+position +", "+location_x +", "+location_y +", "+        duration +", "+        under_pressure +", "+out+"),"
         currEvent = currEvent.replace('"',"'")
         eventsData.append(currEvent)
-        currLine = reading.readline()
     reading.close()
     return eventsData
 def convertSubevents(filename):
@@ -139,7 +138,6 @@ def convertSubevents(filename):
             continue
         else:
             proccessEvent(currEvent,type_id,event_id)
-        currLine = reading.readline()
     reading.close()
 def proccessEvent(eventData, eventType, event_id):
     data = ""
@@ -332,6 +330,8 @@ def proccessEvent(eventData, eventType, event_id):
     else:
         return
         #Do nothing
+    data = data.replace('"',"'")
+    data = data +","
     writeSubevent(data,eventType)
 def writeSubevent(eventData, type):
     if type == "6":
@@ -406,6 +406,22 @@ def callConvert(path,csvDir,type):
             if type == "S":
                 convertSubevents(file)
             print(file)
+def countShots(filename, count):
+    reading = open(filename,"r", encoding='utf-8')
+    currLine = reading.readline()
+    while currLine != "":
+        if '"shot" :' in currLine:
+            count += 1
+        currLine = reading.readline()
+    reading.close()
+    return count
+def callCount(path):
+    dir = os.listdir(path)
+    count = 0
+    for file in dir:
+        if "vert" not in file:
+            count = countShots(file,count)
+    return count
 def writeOut(data,path,type):
     if type == "E":
         writing = open(path+"\Event.csv", "a",encoding = 'utf-8-sig')
@@ -414,5 +430,5 @@ def writeOut(data,path,type):
     writing.close()
 csvDir = os.getcwd()
 callConvert(".",csvDir,"E")
-callConvert(".",csvDir,"S")
+#callConvert(".",csvDir,"S")
 
