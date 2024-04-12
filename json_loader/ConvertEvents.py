@@ -32,15 +32,15 @@ def convertEvents(filename):
         currLine = reading.readline()
         currEvent = ""
         while currLine != "}, {\n" and currLine != "":
-            if "index" in currLine:
+            if "index" in currLine and index == "null":
                 index = extractVal(currLine)
                 currLine = reading.readline()
                 continue
-            elif "period" in currLine:
+            elif "period" in currLine and period == "null":
                 period = extractVal(currLine)
                 currLine = reading.readline()
                 continue
-            elif "timestamp" in currLine:
+            elif "timestamp" in currLine and timestamp == "null":
                 timestamp = extractVal(currLine)
                 currLine = reading.readline()
                 continue
@@ -64,7 +64,7 @@ def convertEvents(filename):
                 play_pattern_name = extractVal(currLine)
                 currLine = reading.readline()
                 continue
-            elif '"team"' in currLine:
+            elif '"team"' in currLine and event_team_id == "null":
                 currLine = reading.readline()
                 event_team_id = extractVal(currLine)
                 currLine = reading.readline()
@@ -80,7 +80,7 @@ def convertEvents(filename):
                 position = extractVal(currLine)
                 currLine = reading.readline()
                 continue
-            elif '"location"' in currLine:
+            elif '"location"' in currLine and location_x == "null":
                 location_x = extractLocation(currLine,1)
                 location_y = extractLocation(currLine,2)
                 currLine = reading.readline()
