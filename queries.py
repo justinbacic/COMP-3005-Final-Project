@@ -1,7 +1,7 @@
 # Created by Gabriel Martell
 
 '''
-Version 1.1 (04/02/2024)
+Version 1.11 (04/02/2024)
 =========================================================
 queries.py (Carleton University COMP3005 - Database Management Student Template Code)
 
@@ -128,8 +128,8 @@ def get_time(cursor, conn, sql_query):
         else:
             print("Execution Time not found in EXPLAIN ANALYZE output.")
             return f"NA"
-    except:
-        print("[ERROR] Error getting time.")
+    except Exception as error:
+        print(f"[ERROR] Error getting time.\n{error}")
 
 
 # Write the results into some Q_n CSV. If the is an error with the query, it is a INC result - Do NOT Modify
@@ -141,7 +141,7 @@ def write_csv(execution_time, cursor, conn, i):
         rows = cursor.fetchall()
         filename = f"{dir_path}/Q_{i}.csv"
 
-        with open(filename, 'w', newline='') as csvfile:
+        with open(filename, 'w', encoding='utf-8', newline='') as csvfile:
             csvwriter = csv.writer(csvfile)
             
             # Write column names to the CSV file
@@ -169,13 +169,14 @@ def Q_1(cursor, conn, execution_time):
     # Enter QUERY within the quotes:
 
     query = """
+    --QUERY 1
 SELECT player_name, AVG(Shot.xg_score) AS avg_xg
 FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Shot
 JOIN Player on Event.player_id = Player.player_id
 WHERE Season.season_name = '2020/2021' AND Competition.competition_name = 'La Liga'
 GROUP BY player_name
 ORDER BY avg_xg DESC;
-    """
+ """
 
     #==========================================================================
 
@@ -202,7 +203,7 @@ JOIN Player on Event.player_id = Player.player_id
 WHERE Season.season_name = '2020/2021' AND Competition.competition_name = 'La Liga'
 GROUP BY player_name
 ORDER BY shotnum DESC;
-    """
+ """
 
     #==========================================================================
 
@@ -231,7 +232,7 @@ AND Competition.competition_name = 'La Liga'
 AND Shot.first_time = true
 GROUP BY player_name
 ORDER BY first_time_shots DESC;
-    """
+ """
 
     #==========================================================================
 
@@ -258,7 +259,7 @@ WHERE Season.season_name ='2020/2021'
 AND Competition.competition_name = 'La Liga'
 GROUP BY team_name
 ORDER BY pass_count DESC;
-    """
+ """
 
     #==========================================================================
 
@@ -285,7 +286,7 @@ WHERE Season.season_name = '2003/2004'
 AND Competition.competition_name = 'Premier League'
 GROUP BY player_name
 ORDER BY intended_recipient_count DESC;
-    """
+ """
 
     #==========================================================================
 
@@ -312,7 +313,7 @@ WHERE Season.season_name = '2003/2004'
 AND Competition.competition_name = 'Premier League'
 GROUP BY team_name
 ORDER BY num_shots DESC;
-    """
+"""
 
     #==========================================================================
 
@@ -340,7 +341,7 @@ AND Competition.competition_name = 'La Liga'
 AND Pass.technique = 'Through Ball'
 GROUP BY player_name
 ORDER BY through_balls DESC;
-    """
+ """
 
     #==========================================================================
 
@@ -368,7 +369,7 @@ AND Competition.competition_name = 'La Liga'
 AND Pass.technique = 'Through Ball'
 GROUP BY team_name
 ORDER BY through_balls DESC;
-    """
+ """
 
     #==========================================================================
 
@@ -396,8 +397,7 @@ AND Competition.competition_name = 'La Liga'
 AND Dribble.outcome = 'Complete'
 GROUP BY player_name
 ORDER BY completed_dribbles DESC;
-
-    """
+ """
 
     #==========================================================================
 
@@ -415,8 +415,8 @@ def Q_10(cursor, conn, execution_time):
     #==========================================================================    
     # Enter QUERY within the quotes:
     
-    query = """
---QUERY 10
+    query = """ 
+    --QUERY 10
 SELECT player_name, COUNT(Dribbled_past.event_id) AS dribbled_past
 FROM Competition NATURAL JOIN Season NATURAL JOIN Matches NATURAL JOIN Event NATURAL JOIN Dribbled_past
 JOIN Player on Event.player_id = Player.player_id
@@ -424,8 +424,7 @@ WHERE Season.season_name = '2020/2021'
 AND Competition.competition_name = 'La Liga'
 GROUP BY player_name
 ORDER BY dribbled_past ASC;
-
-    """
+"""
 
     #==========================================================================
 
